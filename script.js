@@ -19,6 +19,33 @@
   let entry = '';
   let frozen = false;
   let marks = [null, null, null];    // null, 'correct', or 'wrong'
+  let angry = false;                  // Becomes true after ANY incorrect answer.
+
+  // Swap this file with your own loop (WAV) to change the music.
+  // The included 8-bit sample is an ORIGINAL test tune, not game audio.
+  const music = new Audio('./assets/thinkpad-loop.wav');
+  music.loop = true;
+  music.preload = 'auto';
+  music.volume = 0.7;
+
+  function tryStartMusic() {
+    // Chrome sometimes denies audible autoplay until someone taps the PWA.
+    if (angry || frozen || document.hidden || !music.paused) return;
+    const attempt = music.play();
+    if (attempt && typeof attempt.catch === 'function') {
+      attempt.catch(error => {
+        // NotAllowedError is normal on Android; the next touch retries it.
+        if (error.name !== 'NotAllowedError' && error.name !== 'AbortError') {
+          console.warn('Music unavailable. Check assets/thinkpad-loop.wav:', error);
+        }
+      });
+    }
+  }
+
+  function stopMusic() {
+    music.pause();
+    try { music.currentTime = 0; } catch (_) { /* Not yet seekable */ }
+  }
 
   function fitScreen() {
     // Preserve the precise 1536 x 689 image composition on any Android phone.
@@ -40,6 +67,8 @@
   }
 
   function startOver() {
+    stopMusic();
+    angry = false;
     // Ensure both normal problems are different (the third is always corrupted).
     const first = makeProblem();
     let second = makeProblem();
@@ -51,6 +80,7 @@
     entry = '';
     updateScreen();
     readout.textContent = 'Restarted. Question one of three.';
+    tryStartMusic();
   }
 
   function updateScreen() {
@@ -59,7 +89,7 @@
     countDisplay.textContent = `${questionIndex + 1} / 3`;
     equationDisplay.textContent = questionIndex < 2 ? problems[questionIndex].display : '';
     glitchDisplay.hidden = questionIndex !== 2;
-    angryPortrait.hidden = !frozen;
+    angryPortrait.hidden = !angry;
     // Native control states match the picture: no keys operate after failure.
     keys.forEach(key => { key.disabled = frozen; });
     answerDisplay.textContent = entry;
@@ -77,12 +107,18 @@
     if (questionIndex < 2) {
       const correct = Number(entry) === problems[questionIndex].answer;
       marks[questionIndex] = correct ? 'correct' : 'wrong';
+      if (!correct) {
+        angry = true;
+        stopMusic();
+      }
       questionIndex++;
       entry = '';
       readout.textContent = `${correct ? 'Correct.' : 'Incorrect.'} Question ${questionIndex+1} of three.`;
     } else {
       // The impossible question always fails: every input is wrong.
       marks[2] = 'wrong';
+      angry = true;
+      stopMusic();
       frozen = true;
       readout.textContent = 'Wrong. Baldi is angry. Tap his portrait to restart.';
     }
@@ -108,6 +144,15 @@
     if (button) handleKey(button.dataset.key);
   });
   document.getElementById('baldi-reset').addEventListener('click', startOver);
+
+  // Audio may autoplay in an installed PWA, but a gesture is the reliable
+  // fallback. No extra visible controls are needed for the cosplay prop.
+  document.addEventListener('pointerdown', tryStartMusic, { passive: true });
+  document.addEventListener('keydown', tryStartMusic);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) music.pause();
+    else tryStartMusic();
+  });
 
   // Handy during development and when used with an external keyboard.
   document.addEventListener('keydown', event => {
