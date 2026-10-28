@@ -1,0 +1,88 @@
+:root { --scene-scale: 1; --green: #257f00; color-scheme: light; }
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; width: 100%; height: 100%; overflow: hidden;
+  background: var(--green); touch-action: manipulation;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+  overscroll-behavior: none;
+}
+body { position: fixed; inset: 0; font-family: 'Courier New', Courier, monospace; }
+button { font: inherit; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+#scene {
+  position: absolute; top: 50%; left: 50%; width: 1536px; height: 689px;
+  transform: translate(-50%, -50%) scale(var(--scene-scale)); transform-origin: 50% 50%;
+  background: var(--green) url('./assets/background.png') no-repeat center / 1536px 689px;
+  overflow: hidden; isolation: isolate;
+}
+#question-title {
+  position: absolute; left: 337px; top: 96px; width: 585px;
+  font-size: 40px; line-height: 1.08; font-weight: 900;
+  letter-spacing: -2.5px; color: #080808;
+}
+#question-count {
+  position: absolute; left: 917px; top: 99px;
+  font-size: 25px; font-weight: bold; color: #4a4a4a;
+}
+#equation {
+  position: absolute; left: 349px; top: 167px; width: 640px; height: 126px;
+  display: flex; align-items: center;
+  font-family: 'Courier New', monospace;
+  font-size: 105px; line-height: 1; font-weight: 900;
+  color: #030303; white-space: nowrap; letter-spacing: -7px;
+}
+#corruption {
+  position: absolute; left: 319px; top: 141px; width: 700px; height: 189px;
+  pointer-events: none; image-rendering: pixelated;
+}
+[hidden] { display: none !important; }
+#answer-cover {
+  position: absolute; left: 403px; top: 445px; width: 621px; height: 165px;
+  background: white; pointer-events: none;
+}
+#answer-display {
+  position: absolute; left: 405px; top: 481px; width: 616px;
+  font: 900 109px/1 'Courier New', monospace;
+  letter-spacing: -6px; color: #000; white-space: nowrap;
+  overflow: hidden; text-overflow: clip; pointer-events: none;
+}
+.problem-status {
+  position: absolute; width: 90px; height: 68px; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 94px; font-family: Arial, sans-serif; line-height: 1;
+  font-weight: 900; text-shadow: 1px 2px 0 rgba(0,0,0,.15);
+}
+#status-one { left: 114px; top: 84px; }
+#status-two { left: 109px; top: 205px; }
+#status-three { left: 108px; top: 319px; }
+.problem-status.correct { color: #00ed28; transform: rotate(-12deg); }
+.problem-status.wrong { color: #f32121; transform: rotate(-8deg); }
+#baldi-reset {
+  position: absolute; left: 87px; top: 435px; width: 235px; height: 167px;
+  padding: 0; border: none; background: transparent;
+  display: block; overflow: hidden;
+}
+#baldi-reset img { width: 100%; height: 100%; display: block; object-fit: fill; }
+#baldi-reset:focus-visible { outline: 5px solid yellow; outline-offset: 3px; }
+.key {
+  position: absolute; left: var(--x); top: var(--y); width: 76px; height: 76px;
+  background: transparent; border: none; outline: none; padding: 0;
+  border-radius: 12px; touch-action: manipulation;
+}
+.key:active:not(:disabled) { background: rgba(255,255,255,.15); transform: scale(.94); }
+.key:focus-visible { outline: 4px solid #e6f4ac; }
+.key:disabled { cursor: default; pointer-events: none; }
+#ok-button { left: 1101px; top: 450px; width: 355px; height: 226px; border-radius: 92px; }
+#scene.frozen #question-title { color: #a11616; }
+#scene.frozen #answer-display { color: #6e1313; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+#rotate-message {
+  display: none; position: fixed; inset: 0; z-index: 20; padding: 24px;
+  background: #237e00; color: white; text-align: center;
+  font: bold clamp(20px,5vw,34px)/1.35 Arial, sans-serif;
+  align-items: center; justify-content: center; flex-direction: column; gap: 8px;
+}
+#rotate-message span { font-size: 80px; }
+@media (orientation: portrait) and (max-width: 900px) { #rotate-message { display: flex; } }

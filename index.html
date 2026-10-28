@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#257f00">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="A tiny cosplay Think Pad with three math questions and a secret portrait reset.">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./assets/icon-192.png">
+  <link rel="stylesheet" href="./style.css">
+  <title>Think Pad — Cosplay Edition</title>
+  <script defer src="./script.js"></script>
+</head>
+<body>
+  <main id="scene" aria-label="Think Pad calculator game">
+    <!-- The art is the actual user-supplied mockup, cleaned up for the initial state. -->
+    <div id="question-title" aria-live="polite">SOLVE MATH Q1:</div>
+    <div id="equation" aria-live="polite"></div>
+    <img id="corruption" src="./assets/corrupted-problem.svg" alt="Scrambled impossible math problem" draggable="false" hidden>
+    <div id="question-count" aria-hidden="true">1 / 3</div>
+    <div id="answer-cover" aria-hidden="true"></div>
+    <div id="answer-display" role="status" aria-label="Current answer" aria-live="polite"></div>
+
+    <div id="status-one" class="problem-status" role="img" aria-label="Question one not yet answered"></div>
+    <div id="status-two" class="problem-status" role="img" aria-label="Question two not yet answered"></div>
+    <div id="status-three" class="problem-status" role="img" aria-label="Question three not yet answered"></div>
+
+    <!-- Baldi's picture stays a secret reset button, including after the freeze. -->
+    <button id="baldi-reset" type="button" aria-label="Secret reset: tap Baldi to restart all questions" title="Secret reset">
+      <img id="angry-portrait" src="./assets/baldi-angry.png" alt="Baldi frowning" draggable="false" hidden>
+    </button>
+
+    <div id="keypad" aria-label="Calculator keypad">
+      <button class="key" type="button" data-key="7" style="--x:1133px;--y:52px" aria-label="7"></button>
+      <button class="key" type="button" data-key="8" style="--x:1236px;--y:52px" aria-label="8"></button>
+      <button class="key" type="button" data-key="9" style="--x:1336px;--y:52px" aria-label="9"></button>
+      <button class="key" type="button" data-key="4" style="--x:1133px;--y:154px" aria-label="4"></button>
+      <button class="key" type="button" data-key="5" style="--x:1236px;--y:154px" aria-label="5"></button>
+      <button class="key" type="button" data-key="6" style="--x:1336px;--y:154px" aria-label="6"></button>
+      <button class="key" type="button" data-key="1" style="--x:1133px;--y:255px" aria-label="1"></button>
+      <button class="key" type="button" data-key="2" style="--x:1236px;--y:255px" aria-label="2"></button>
+      <button class="key" type="button" data-key="3" style="--x:1336px;--y:255px" aria-label="3"></button>
+      <button class="key" type="button" data-key="C" style="--x:1133px;--y:356px" aria-label="Clear answer"></button>
+      <button class="key" type="button" data-key="0" style="--x:1236px;--y:356px" aria-label="0"></button>
+      <button class="key" type="button" data-key="-" style="--x:1336px;--y:356px" aria-label="Toggle negative"></button>
+      <button id="ok-button" class="key" type="button" data-key="OK" aria-label="Submit answer"></button>
+    </div>
+    <div id="screenreader-progress" class="sr-only" role="status" aria-live="polite"></div>
+  </main>
+  <div id="rotate-message" role="note"><span aria-hidden="true">↻</span> Rotate the phone sideways to play.</div>
+</body>
+</html>
